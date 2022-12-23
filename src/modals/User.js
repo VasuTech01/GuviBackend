@@ -24,32 +24,27 @@ const userSchema = new Schema({
     },
     age: {
         type: Number,
-        default: 0,
-        
-    },
-    gender: {
-        type: String,
-        trim: true,
-        lowercase: true,
-        
+        default: 0,    
     },
     dob: {
-        type: Date,
+        type: String,
+        default: "1970-01-01"
     },
     mobile: {
         type: Number,
         trim: true,
-        maxlength: 10
+        maxlength: 10,
+        default: 0
     },
     address: {
         type: String,
         trim: true,
+        default:"",
     },
     tokens: [{
         token: {
             type: String,
             trim: true,
-            required: true,
         }
     }]
 }, { timestamps: true });
@@ -63,6 +58,7 @@ userSchema.pre('save', async function (next) {
     next();
 })
 userSchema.statics.findByCredentials = async (email, password) => {
+      console.log(email)
     try {
         const user = await User.findOne({ email });
         if (!user) {

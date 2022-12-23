@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 require("./src/DB/mongoose");
 const helmet = require("helmet");
+const cors = require("cors");
 const path = require("path");
 const uuid = require("uuid");
 const session = require("express-session");
@@ -10,6 +11,7 @@ const router = require("./src/routers/User");
 const port = process.env.PORT || 5000;
 const app = express();
 app.use(helmet());
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(

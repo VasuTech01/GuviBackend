@@ -13,7 +13,7 @@ router.post("/user/signup",async (req, res) => {
         res.status(500).send(e);
     }
 })
-router.get("/user/login", async (req, res) => {
+router.post("/user/login", async (req, res) => {
     
     const { email, password } = req.body;
     try {
@@ -27,31 +27,37 @@ router.get("/user/login", async (req, res) => {
         console.log(token);
         res.status(200).send({ user:user.user,token,session:req.session});
     } catch (e) {
-        res.status(400).send({ error:e.message, });
+        console.log(e.message);
+        res.status(400).send({error:e.message});
     }
 })
 router.patch("/user/me",auth,async (req, res) => {
     const body = req.body;
+    console.log("body", body);
     const updates = Object.keys(body);
     updates.forEach((u) => {
         req.user[u] = body[u];
     })
     console.log(req.user);
     try {
-        await req.user.save();
-        res.status(200).send({ user:req.user ,session:req.session});
+       const user= await User.updateOne({ email: body.email }, req.user);
+        // await req.user.save();
+        res.status(200).send({ user:req.user,session:req.session});
     } catch (e) {
         res.status(404).send(e);
     }
 })
 router.post("/user/logout", auth, async (req, res) => {
+    console.log("Logging Out USer");
     try {
       req.user.tokens = req.user.tokens.filter((token) => {
         return token.token !== req.token;
       });
+        console.log(req.user);
       await req.user.save();
       res.send(req.user);
     } catch (e) {
+        console.log(e);
       res.status(500).send("Error hai error");
     }
   });
