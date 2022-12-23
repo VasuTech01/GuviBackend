@@ -1,17 +1,18 @@
 const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
-require("./src/DB/mongoose");
+require("./DB/mongoose");
 const helmet = require("helmet");
 const cors = require("cors");
 const path = require("path");
 const uuid = require("uuid");
 const session = require("express-session");
-const router = require("./src/routers/User");
+const router = require("./routers/User");
 const port = process.env.PORT || 5000;
 const app = express();
 app.use(helmet());
 app.use(cors());
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
@@ -20,7 +21,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 10 * 60 * 1000,
+      maxAge: 24*60 * 60 * 1000,
     },
   })
 );
@@ -36,3 +37,5 @@ app.use(router);
 app.listen(port, () => {
   console.log(`Listening on Port ${port}`);
 });
+
+
