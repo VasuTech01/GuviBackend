@@ -10,7 +10,8 @@ router.post("/user/signup",async (req, res) => {
         req.session.userToken = token;
         res.status(200).send({ user,token,session:req.session});
     } catch (e) {
-        res.status(500).send(e);
+       
+        res.status(200).send({error:e.message});
     }
 })
 router.post("/user/login", async (req, res) => {
@@ -18,7 +19,7 @@ router.post("/user/login", async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.findByCredentials(email, password);
-        console.log(user);
+     
         if (!user.msg) {
             console.log(user);
             throw new Error(user.error);
@@ -28,7 +29,7 @@ router.post("/user/login", async (req, res) => {
         res.status(200).send({ user:user.user,token,session:req.session});
     } catch (e) {
         console.log(e.message);
-        res.status(400).send({error:e.message});
+        res.status(200).send({error:e.message});
     }
 })
 router.patch("/user/me",auth,async (req, res) => {
